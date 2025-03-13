@@ -1,5 +1,5 @@
 import pytest
-from simple_math import SimpleMath
+from hw1.simple_math import SimpleMath
 
 @pytest.fixture
 def simple_math():
