@@ -7,7 +7,7 @@ def simple_math():
     return SimpleMath()
 
 def test_square(simple_math):
-    """Тестируем метод square."""
+    """Тестируем метоод square."""
     assert simple_math.square(2) == 4      # 2^2 = 4
     assert simple_math.square(-3) == 9     # (-3)^2 = 9
     assert simple_math.square(0) == 0       # 0^2 = 0

@@ -6,5 +6,5 @@ class SimpleMath:
         return x * x
 
     def cube(self, x):
-        """Возвращает куб числа."""
+        """Возвращает куб чисел."""
         return x * x * x
