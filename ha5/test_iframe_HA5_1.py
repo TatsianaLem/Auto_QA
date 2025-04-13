@@ -1,24 +1,31 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 @pytest.fixture(scope="module")
-def driver():
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
+def browser():
+    browser = webdriver.Chrome()
+    yield browser
+    browser.quit()
 
-def test_text_in_iframe(driver):
-    driver.get("https://bonigarcia.dev/selenium-webdriver-java/iframes.html")
 
-    WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR, "iframe")))
+def test_iframe(browser):
+    browser.get("https://bonigarcia.dev/selenium-webdriver-java/iframes.html")
 
-    # Найти элемент, содержащий искомый текст
-    text_element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'semper posuere integer et senectus justo curabitur.')]"))
-    )
+    iframe = browser.find_element(By.ID, "my-iframe")
+    browser.switch_to.frame(iframe)
+    paragraphs = browser.find_elements(By.CLASS_NAME, "Lead")
+    assert paragraphs
 
-    assert text_element.is_displayed(), "Текст не отображается на странице."
-    print("Текст найден и отображается на странице.")
+    exp_text = 'doler sit amet consectetur adipiscing elit habitant metus, tincidunt maecenas'
+
+    count = 0
+    for i in paragraphs:
+        if exp_text in i.text:
+            count+=1
+
+    assert count > 0
+
+
+

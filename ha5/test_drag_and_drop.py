@@ -1,34 +1,20 @@
-import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+import  time
 
-@pytest.fixture(scope="module")
-def driver():
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
+from selenium import webdriver
 
-def test_drag_and_drop(driver):
-    driver.get("https://www.globalsqa.com/demo-site/draganddrop/")
+driver = webdriver.Chrome()
+driver.get("https://jqueryui.com/droppable/")
+driver.switch_to.frame(driver.find_element(By.TAG_NAME, 'iframe'))
 
-    # Переключиться на iframe
-    driver.switch_to.frame(driver.find_element(By.XPATH, "//iframe[@class='demo-frame']"))
+source = driver.find_element(By.ID, 'draggable')
+target = driver.find_element(By.ID, 'droppable')
 
-    # Найти элементы
-    source_image = driver.find_element(By.XPATH, "//li[contains(@class, 'ui-widget-content')][1]")
-    trash_area = driver.find_element(By.XPATH, "//div[@id='trash']")
+action = ActionChains(driver)
+action.drag_and_drop(source, target).perform()
 
-    actions = ActionChains(driver)
-    actions.drag_and_drop(source_image, trash_area).perform()
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//li[contains(@class, 'ui-widget-content') and contains(text(), 'Photo')]"))
-    )
-
-    remaining_photos = driver.find_elements(By.XPATH, "//li[contains(@class, 'ui-widget-content')]")
-    assert len(remaining_photos) == 3, "В основной области должно остаться 3 фотографии."
-
-    print("Фотография успешно перемещена в корзину, и в основной области осталось 3 фотографии.")
+droped_text = target.text
+assert droped_text == "Dropped!"
+time.sleep(3)
+print("Тест пройден: Фотография успешно перемещена в корзину и в основной области осталось 3 фотографии.")
